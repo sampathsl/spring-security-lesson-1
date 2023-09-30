@@ -8,6 +8,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -31,18 +33,14 @@ public class SecurityConfig {
 
   @Bean
   public InMemoryUserDetailsManager inMemoryUserDetailsManagerService() {
-    UserDetails admin =
-        User.withDefaultPasswordEncoder()
-            .username("admin")
-            .password("add")
-            .authorities("ADMIN")
-            .build();
+    UserDetails admin = User.withUsername("admin").password("add").authorities("ADMIN").build();
     UserDetails clientOne =
-        User.withDefaultPasswordEncoder()
-            .username("client1")
-            .password("client1")
-            .authorities("READ")
-            .build();
+        User.withUsername("client1").password("client1").authorities("READ").build();
     return new InMemoryUserDetailsManager(admin, clientOne);
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return NoOpPasswordEncoder.getInstance();
   }
 }
